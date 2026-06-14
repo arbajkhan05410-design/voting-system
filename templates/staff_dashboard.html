@@ -1,0 +1,175 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Staff Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+
+        body {
+            background: #f1f5f9;
+        }
+
+        .navbar-custom {
+            background: #0f172a;
+        }
+
+        .title {
+            text-align: center;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #0f172a;
+        }
+
+        .box {
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+            transition: 0.3s;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+            font-size: 15px;
+        }
+
+        .box:hover {
+            transform: translateY(-4px);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* 🔥 COLORS UPDATED + NEW ADDED */
+
+        .blue   { background: #1d4ed8; }
+        .green  { background: #16a34a; }
+        .red    { background: #dc2626; }
+        .yellow { background: #f59e0b; color: #111; }
+
+        /* NEW COLORS */
+        .purple { background: #7c3aed; }
+        .teal   { background: #0d9488; }
+
+        .icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark navbar-custom px-3">
+    <span class="navbar-brand">🏛️ Staff Dashboard</span>
+
+    <a href="/logout/" class="btn btn-danger btn-sm">
+        Logout
+    </a>
+</nav>
+
+<h2 class="title">Admin Control Panel</h2>
+
+<div class="container">
+
+    <!-- ROW 1 -->
+    <div class="row g-3">
+
+        <div class="col-md-6">
+            <a href="/add-candidate/">
+                <div class="box blue">
+                    <div class="icon">➕</div>
+                    Add Candidate
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6">
+            <a href="/view-candidates/">
+                <div class="box green">
+                    <div class="icon">👀</div>
+                    View Candidates
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <!-- ROW 2 -->
+    <div class="row g-3 mt-1">
+
+        <div class="col-md-6">
+            <a href="/add-voter/">
+                <div class="box purple">
+                    <div class="icon">➕</div>
+                    Add Voter
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6">
+            <a href="/view-voters/">
+                <div class="box teal">
+                    <div class="icon">👀</div>
+                    View Voters
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <!-- ROW 3 -->
+    <div class="row g-3 mt-1">
+
+        <div class="col-md-6">
+            <a href="/start-election/">
+                <div class="box green">
+                    <div class="icon">▶</div>
+                    Start Election
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6">
+            <a href="/stop-election/">
+                <div class="box red">
+                    <div class="icon">⛔</div>
+                    Stop Election
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <!-- ROW 4 -->
+    <div class="row g-3 mt-1 mb-4">
+
+        <div class="col-md-6">
+            <a href="/view-applications/">
+                <div class="box teal">
+                    <div class="icon">📩</div>
+                    Applications Status
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6">
+            <a href="/declare-winner/">
+                <div class="box yellow">
+                    <div class="icon">🏆</div>
+                    Declare Winner
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

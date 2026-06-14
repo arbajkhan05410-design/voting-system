@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Voters</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f7fc;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #36d1dc, #5b86e5);
+            color: white;
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #f1f9ff;
+            transition: 0.2s;
+        }
+
+        .edit-btn {
+            padding: 6px 10px;
+            background: #ffc107;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: black;
+            font-weight: bold;
+        }
+
+        .delete-btn {
+            padding: 6px 10px;
+            background: #dc3545;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
+
+        .edit-btn:hover {
+            background: #e0a800;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .enroll {
+            color: #007bff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>All Voters</h1>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Enrollment No</th>
+            <th>Actions</th>
+        </tr>
+
+        {% for voter in voters %}
+        <tr>
+            <td>{{ voter.id }}</td>
+            <td class="name">{{ voter.name }}</td>
+            <td class="enroll">{{ voter.enrollment_no }}</td>
+
+            <td>
+                <a href="/edit-voter/{{ voter.id }}/">
+                    <button class="edit-btn">Edit</button>
+                </a>
+
+                <a href="/delete-voter/{{ voter.id }}/" onclick="return confirm('Are you sure?')">
+                    <button class="delete-btn">Delete</button>
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No voters found</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+</div>
+
+</body>
+</html>
