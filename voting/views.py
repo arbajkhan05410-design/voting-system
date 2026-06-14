@@ -12,32 +12,64 @@ from .models import (
 # ---------------- LOGIN ----------------
 def login_view(request):
     if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
         role = request.POST.get("role")
 
-        if role == "staff":
-            return redirect("staff_dashboard")
+        if role == "voter":
+            # Database mein check kar rahe hain ki voter exist karta hai ya nahi
+            voter = Voter.objects.filter(name=username, password=password).first()
+            if voter:
+                request.session['voter_id'] = voter.id
+                return redirect("voter_dashboard")
+            else:
+                return render(request, "login.html", {"message": "Invalid Voter Username or Password!"})
+
+        elif role == "staff":
+            # Staff ke liye simple check (Aap isko zarurat ke hisaab se change kar sakte hain)
+            if username == "admin" and password == "admin123":
+                request.session['staff_logged_in'] = True
+                return redirect("staff_dashboard")
+            else:
+                return render(request, "login.html", {"message": "Invalid Staff Credentials!"})
+
         elif role == "candidate":
-            return redirect("candidate_dashboard")
-        elif role == "voter":
-            return redirect("voter_dashboard")
+            # Candidate database mein exist karta hai ya nahi (sirf naam se check)
+            candidate = Candidate.objects.filter(name=username).first()
+            if candidate:
+                request.session['candidate_id'] = candidate.id
+                return redirect("candidate_dashboard")
+            else:
+                return render(request, "login.html", {"message": "Candidate not found!"})
 
     return render(request, "login.html")
 
 
 # ---------------- DASHBOARD ----------------
 def staff_dashboard(request):
+    # Security check: Agar staff login nahi hai toh wapas login page par bhejo
+    if not request.session.get('staff_logged_in'):
+        return redirect("login")
     return render(request, "staff_dashboard.html")
 
 
 def candidate_dashboard(request):
+    if not request.session.get('candidate_id'):
+        return redirect("login")
     return render(request, "candidate_dashboard.html")
 
 
 def voter_dashboard(request):
+    # Session se logged-in voter ki ID nikalna
+    voter_id = request.session.get('voter_id')
+    
+    # Agar bina login kiye direct URL open kare, toh wapas login par bhej do
+    if not voter_id:
+        return redirect("login")
+
+    voter = get_object_or_404(Voter, id=voter_id)
     candidates = Candidate.objects.all()
     status = ElectionStatus.objects.get_or_create(id=1)[0]
-
-    voter = Voter.objects.last()  # TEMP FIX (login not implemented)
 
     if request.method == "POST":
 
@@ -168,24 +200,26 @@ def stop_election(request):
     status.save()
     return redirect("staff_dashboard")
 
-
-# ---------------- RESULTS ----------------
+# ---------------- RESULTS & DECLARE WINNER ----------------
 def results(request):
+    # 'vote' ki jagah 'votes' use karna hai kyunki related_name='votes' hai
     candidates = Candidate.objects.annotate(
-        total_votes=Count('vote')
+        total_votes=Count('votes') 
     )
     return render(request, "results.html", {
         "candidates": candidates
     })
 
-
 def declare_winner(request):
-    winner = Candidate.objects.annotate(
-        total_votes=Count('vote')
-    ).order_by('-total_votes').first()
+    candidates = Candidate.objects.annotate(
+        total_votes=Count('votes')
+    ).order_by('-total_votes')
+
+    winner = candidates.first()
 
     return render(request, "declare_winner.html", {
-        "winner": winner
+        "winner": winner,
+        "candidates": candidates
     })
 
 
@@ -228,7 +262,7 @@ def reject_application(request, application_id):
 
 # ---------------- LOGOUT ----------------
 def logout_view(request):
-    request.session.flush()
+    request.session.flush() # Yeh line session delete kar deti hai (secure logout)
     return redirect("login")
 
 def change_candidate_password(request):
@@ -236,18 +270,3 @@ def change_candidate_password(request):
         request,
         "change_candidate_password.html"
     )
-# ---------------- DECLARE WINNER ----------------
-from django.db.models import Count
-
-def declare_winner(request):
-
-    candidates = Candidate.objects.annotate(
-        total_votes=Count('vote')
-    ).order_by('-total_votes')
-
-    winner = candidates.first()
-
-    return render(request, "declare_winner.html", {
-        "winner": winner,
-        "candidates": candidates
-    })
