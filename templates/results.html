@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Election Results</title>
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            background:#f4f4f4;
+        }
+
+        h1{
+            text-align:center;
+        }
+
+        table{
+            width:80%;
+            margin:auto;
+            border-collapse:collapse;
+            background:white;
+        }
+
+        th,td{
+            border:1px solid #ddd;
+            padding:10px;
+            text-align:center;
+        }
+
+        th{
+            background:#007bff;
+            color:white;
+        }
+    </style>
+
+</head>
+<body>
+
+<h1>Election Results</h1>
+
+<table>
+
+<tr>
+    <th>ID</th>
+    <th>Candidate Name</th>
+    <th>Department</th>
+    <th>Total Votes</th>
+</tr>
+
+{% for candidate in candidates %}
+<tr>
+    <td>{{ candidate.id }}</td>
+    <td>{{ candidate.name }}</td>
+    <td>{{ candidate.department }}</td>
+    <td>{{ candidate.total_votes }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</body>
+</html>
